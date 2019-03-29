@@ -11,13 +11,13 @@ module.exports = {
         host: 'localhost',
         user: 'root',
         password: '123123',
-        database: 'team-koa'
+        database: 'pyteam'
       }
     : {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'team-koa'
+        database: 'pyteam'
       },
   errorCode: {
     SUCCESS: 200,

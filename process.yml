@@ -3,6 +3,6 @@ apps:
     # instances: 4
     # exec_mode: cluster
     watch: false
-    name: team-koa
+    name: pyteam
     env:
       NODE_ENV: production

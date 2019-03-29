@@ -51,7 +51,7 @@ pm2 start process.yml
 正式环境重启
 
 ```bash
-pm2 restart team-koa
+pm2 restart pyteam
 ```
 
 ## 特色

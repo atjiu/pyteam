@@ -20,7 +20,7 @@ models.sync();
 app.use(error());
 app.use(koaLogger());
 
-app.keys = [ 'team-koa-session' ];
+app.keys = [ 'pyteam-session' ];
 const sessionOpt = {
   key: 'SESSIONID' /** (string) cookie key (default is koa:sess) */,
   /** (number || 'session') maxAge in ms (default is 1 days) */
