@@ -1,0 +1,47 @@
+{% extends './layout/layout.html' %}
+{% block page_content %}
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">登录</div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" class="form-control" placeholder="用户名"/>
+          </div>
+          <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" class="form-control" placeholder="密码"/>
+          </div>
+          <div class="form-group">
+            <button id="login_btn" class="btn btn-sm btn-primary">登录</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+{% endblock %}
+{% block page_js %}
+  <script>
+    $(function() {
+      $("#login_btn").click(function() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        $.post('/login', {
+          username: username,
+          password: password
+        }, function(data) {
+          console.log(data);
+          if (data.code === 200) {
+            localStorage.setItem('token', data.detail.token);
+            location.href = '/';
+          } else {
+            alert(data.description);
+          }
+        })
+      })
+    })
+  </script>
+{% endblock %}

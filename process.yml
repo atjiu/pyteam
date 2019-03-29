@@ -1,0 +1,8 @@
+apps:
+  - script: index.js
+    # instances: 4
+    # exec_mode: cluster
+    watch: false
+    name: team-koa
+    env:
+      NODE_ENV: production

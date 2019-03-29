@@ -1,0 +1,39 @@
+{% if not is_pjax %}
+  {% extends "../../layout/layout.html" %}
+{% endif %}
+{% block page_content %}
+<ol class="breadcrumb">
+  <li>
+    <a data-pjax href="/admin/index">Home</a>
+  </li>
+  <li>
+    <a data-pjax href="/admin/department/list">部门</a>
+  </li>
+  <li class="active">创建</li>
+</ol>
+
+<div class="row">
+  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    {% set currentMenu = 'department' %}
+    {% include "../admin_menu.html" %}
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+    <div class="panel panel-default">
+      <div class="panel-heading">创建部门</div>
+      <div class="panel-body">
+        <form action="/admin/department/add" method="POST" role="form">
+          <div class="form-group">
+            <label for="username">部门名</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="部门名">
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary">创建</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block page_js %}
+
+{% endblock %}

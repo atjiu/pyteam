@@ -1,0 +1,50 @@
+{% if not is_pjax %}
+  {% extends "../../layout/layout.html" %}
+{% endif %}
+{% block page_content %}
+<ol class="breadcrumb">
+  <li>
+    <a data-pjax href="/admin/index">Home</a>
+  </li>
+  <li class="active">用户列表</li>
+</ol>
+
+<div class="row">
+  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    {% set currentMenu = 'user' %}
+    {% include "../admin_menu.html" %}
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>用户名</th>
+          <th>部门</th>
+          <th>注册时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in users %}
+          <tr>
+            <td>{{item.id}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.department.name}}</td>
+            <td>{{item.createdAt | fromNow}}</td>
+            <td>
+              <a data-pjax href="/admin/user/edit?id={{item.id}}" class="btn btn-warning btn-xs">编辑</a>
+              {# <a data-pjax href="javascript:if(confirm('确定要删除这个用户吗？'))location.href='/admin/user/delete?id={{item.id}}'" class="btn btn-danger btn-xs">删除</a> #}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+{% block page_js %}
+
+{% endblock %}

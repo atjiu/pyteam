@@ -1,0 +1,52 @@
+{% if not is_pjax %}
+  {% extends "./layout/layout.html" %}
+{% endif %}
+{% block page_content %}
+<ol class="breadcrumb">
+  <li>
+    <a data-pjax href="/">Home</a>
+  </li>
+  <li class="active">我的任务</li>
+</ol>
+
+<div class="row">
+  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    <div id="wait_tasks_div" class="drag-div">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">待处理</h3>
+        </div>
+        <table class="table" id="wait_tasks_table"></table>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    <div id="processing_tasks_div" class="drag-div">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">进行中</h3>
+        </div>
+        <table class="table" id="processing_tasks_table"></table>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    <div id="finish_tasks_div" class="drag-div">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">已完成</h3>
+        </div>
+        <table class="table" id="finish_tasks_table"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block page_js %}
+  <script>
+    setTimeout(function() {
+      ws.emit('data', { code: 912, detail: { } });
+    }, 500);
+  </script>
+{% endblock %}

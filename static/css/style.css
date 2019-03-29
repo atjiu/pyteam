@@ -1,0 +1,83 @@
+body {
+  background-color: #f5f5f5;
+}
+
+.list-group-item:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.breadcrumb {
+  padding: 8px 0;
+}
+
+.table {
+  background-color: #fff;
+}
+
+#projects_div a {
+  color: #333;
+}
+#projects_div a:hover {
+  text-decoration: none;
+  color: #333;
+}
+#projects_div a:visited {
+  text-decoration: none;
+  color: #333;
+}
+#projects_div a:focus {
+  text-decoration: none;
+  color: #333;
+}
+
+.wait-append-tr {
+  background-color: #f5f5f5;
+  color: #ddd;
+  border: 2px dashed #eee;
+  text-align: center;
+}
+.wait-append-tr td {
+  padding: 5px 0;
+}
+
+.drag-div {
+  height: calc(100vh - 70px - 56px - 20px);
+}
+
+.task-detail-table ul,
+.task-detail-table ol {
+  padding-left: 25px;
+}
+
+.task-dynamic-div {
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  font-size: 12px;
+  color: #777;
+  background-color: #fff;
+}
+
+.task-dynamic-div div {
+  padding: 5px 10px;
+  border-bottom: 1px dashed #ccc;
+}
+
+.task-dynamic-div div:last-child {
+  border-bottom: 0;
+}
+
+.task-dynamic-div p {
+  margin-bottom: 0;
+}
+
+#content {
+  border-radius: 0;
+  margin-bottom: 25px;
+}
+
+.task-dynamic-div ul {
+  list-style: square;
+  padding-left: 20px;
+}

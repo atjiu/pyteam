@@ -1,0 +1,90 @@
+{% if not is_pjax %}
+  {% extends "./layout/layout.html" %}
+{% endif %}
+{% block page_content %}
+
+<ol class="breadcrumb">
+  <li>
+    <a data-pjax href="/">Home</a>
+  </li>
+  <li class="active">我参与的项目</li>
+  {% if _user.department %}
+    <button type="button" class="btn btn-xs btn-primary pull-right" data-toggle="modal" href='#modal-id'>创建项目</button>
+  {% endif %}
+</ol>
+
+<div class="row" id="projects_div">
+
+</div>
+
+<div class="modal fade" id="modal-id">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form onsubmit="return;" id="modal_form">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">创建项目</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">项目名</label>
+            <input type="text" class="form-control" id="name" placeholder="项目名">
+          </div>
+          <div class="form-group">
+            <label for="">描述</label>
+            <input type="text" class="form-control" id="intro" placeholder="描述">
+          </div>
+          {# <div class="form-group">
+            <label for="department">部门</label>
+            <select name="departmentId" id="departmentId" class="form-control">
+              <option value="">请选择部门</option>
+              {% for item in departments %}
+                <option value="{{item.id}}">{{item.name}}</option>
+              {% endfor %}
+            </select>
+          </div> #}
+          <div class="form-group">
+              <label for="">参与用户</label>
+              <div class="row">
+                {% for item in users %}
+                  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <input type="checkbox" id="joinUser_{{item.id}}" name="joinUsers" value="{{item.id}}">
+                    <label for="joinUser_{{item.id}}">{{item.username}}</label>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" onclick="saveProject()">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block page_js %}
+  <script>
+    setTimeout(function() {
+      ws.emit('data', {code: 906, detail: {}});
+    }, 500);
+    function saveProject() {
+      let name = $("#name").val();
+      let intro = $("#intro").val();
+      let departmentId = $("#departmentId").val();
+      // 收集选中的用户checkbox
+      var joinUsers = [];
+      $("input[name='joinUsers']:checked").each(function(item){
+        joinUsers.push($(this).val())
+      });
+      if (name.length === 0) {
+        alert("项目名不能为空");
+        return;
+      }
+      ws.emit('data', {code: 903, detail: {name: name, intro: intro, joinUsers: joinUsers}});
+      $("#modal_form")[0].reset();
+      $("#modalCloseBtn").click();
+    }
+  </script>
+{% endblock %}

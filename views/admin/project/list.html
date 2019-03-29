@@ -1,0 +1,49 @@
+{% if not is_pjax %}
+  {% extends "../../layout/layout.html" %}
+{% endif %}
+{% block page_content %}
+<ol class="breadcrumb">
+  <li>
+    <a data-pjax href="/admin/index">Home</a>
+  </li>
+  <li class="active">项目列表</li>
+</ol>
+
+<div class="row">
+  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    {% set currentMenu = 'project' %}
+    {% include "../admin_menu.html" %}
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>项目名</th>
+          <th>创建时间</th>
+          <th>创建者</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in projects %}
+          <tr>
+            <td>{{item.id}}</td>
+            <td><a href="/project/{{item.id}}" data-pjax>{{item.name}}</a></td>
+            <td>{{item.createdAt | fromNow}}</td>
+            <td>{{item.creatorUser.username}}</td>
+            <td>
+              <a href="javascript:if(confirm('确定要删除这个项目吗？\n这个操作会删除当前项目下所有的任务'))location.href='/admin/project/delete?id={{item.id}}'" class="btn btn-danger btn-xs">删除</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+{% block page_js %}
+
+{% endblock %}

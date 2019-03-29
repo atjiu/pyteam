@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{page_title}}</title>
+  <link rel="shortcut icon" href="//yiiu.co/favicon.ico" type="image/x-icon">
+  {# 本地的静态资源文件, 内网部署时请使用本地静态资源文件 #}
+  {# <link rel="stylesheet" href="/libs/bootstrap/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="/libs/datetimepicker/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="/libs/tribute/tribute.css" /> #}
+  {# cdn的静态资源文件 #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tributejs/3.6.0/tribute.min.css" />
+
+  <link rel="stylesheet" href="/css/style.css"/>
+  {% block page_css %}{% endblock %}
+</head>
+<body>
+  {% include "./header.html" %}
+  <div class="container" id="main">
+    {% block page_content %}{% endblock %}
+  </div>
+  {# 本地的静态资源文件, 内网部署时请使用本地静态资源文件 #}
+  {# <script src="/libs/jquery/jquery.min.js"></script>
+  <script src="/libs/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/libs/moment/moment-with-locales.js"></script>
+  <script src="/libs/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="/libs/pjax/jquery.pjax.js"></script>
+  <script src="/libs/tribute/tribute.min.js"></script>
+  <script src="/libs/lodash/lodash.min.js"></script>
+  <script src="/libs/socket.io/socket.io.js"></script>#}
+  {# cdn的静态资源文件 #}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tributejs/3.6.0/tribute.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  {% if _user %}
+    <script>
+      moment.locale('zh-cn');
+      // 初始化websocket
+      let ws = io.connect('{{ws_url}}', {
+        secure: {{ws_secure}},
+        query: {
+          userId: {{_user.id}},
+          username: '{{_user.username}}'
+        }
+      });
+      ws.on('disconnect', function() {
+        console.log(`{{_user.username}} 失去连接！`);
+      })
+    </script>
+    <script src="/js/drag.js"></script>
+    <script>
+      // 初始化pjax
+      $(document).pjax('a[data-pjax]', '#main');
+      // 没效果
+      {# $(document).on('submit', 'form[data-pjax]', function(event) {
+        event.preventDefault();
+        $.pjax.submit(event, '#main');
+      }) #}
+      $(document).on('pjax:complete', function() {
+        dragTask();
+      });
+    </script>
+    <script src="/js/app.js"></script>
+  {% endif %}
+  {% block page_js %}{% endblock %}
+</body>
+</html>
