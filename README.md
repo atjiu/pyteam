@@ -36,6 +36,7 @@
 
 ```bash
 npm install
+npm install -g nodemon
 ```
 
 启动项目
