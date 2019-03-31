@@ -10,79 +10,63 @@
   <li class="active">{{project.name}}</li>
   <span class="pull-right">
     <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" href='#modal-id-update'>项目设置</button>
-    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" href='#modal-id'>创建任务</button>
+    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" href='#modal-id'>创建接口</button>
   </span>
 </ol>
 
 <div class="row">
-  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-    <div id="wait_tasks_div" class="drag-div">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">待处理</h3>
-        </div>
-        <table class="table" id="wait_tasks_table"></table>
-      </div>
+  <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+    <div class="panel panel-default">
+      <div class="list-group" id="apidoc_list_div"></div>
     </div>
   </div>
-  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-    <div id="processing_tasks_div" class="drag-div">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">进行中</h3>
-        </div>
-        <table class="table" id="processing_tasks_table"></table>
-      </div>
-    </div>
-  </div>
-  <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-    <div id="finish_tasks_div" class="drag-div">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">已完成</h3>
-        </div>
-        <table class="table" id="finish_tasks_table"></table>
-      </div>
+  <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+    <div class="panel panel-default" id="apidoc_detail_div">
     </div>
   </div>
 </div>
 
 {# 创建任务模态框 #}
 <div class="modal fade" id="modal-id">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">创建任务</h4>
+        <h4 class="modal-title">创建接口</h4>
       </div>
       <div class="modal-body">
         <form onsubmit="return;" id="modal_form">
           <div class="form-group">
-            <label for="">任务名</label>
+            <label for="">接口名</label>
             <input type="hidden" id="projectId" value="{{project.id}}"/>
-            <input type="text" class="form-control" id="name" placeholder="任务名">
+            <input type="text" class="form-control" id="name" placeholder="接口名">
           </div>
           <div class="form-group">
-            <label for="">描述</label>
-            <textarea id="intro" rows="5" class="form-control" placeholder="描述, 支持Markdown语法..."></textarea>
-          </div>
-          <div class="form-group">
-            <label for="">截止日期</label>
-            <input type="text" class="form-control" id="deadline" placeholder="截止日期">
-          </div>
-          <div class="form-group">
-            <label for="">指派给</label>
-            <select id="executor" class="form-control">
-              {% for item in users %}
-                <option value="{{item.id}}">{{item.username}}</option>
-              {% endfor %}
+            <label for="">请求类型</label>
+            <select class="form-control" id="method">
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="">路径</label>
+            <input type="text" id="path" class="form-control" placeholder="路径，以/开头">
+          </div>
+          <div class="form-group">
+            <label for="">参数 </label><button type="button" onclick="addParamsRow()" class="btn btn-primary btn-xs pull-right">添加参数</button>
+            <div id="params_div"></div>
+          </div>
+          <div class="form-group">
+            <label for="">返回值</label>
+            <textarea id="returnContent" class="form-control" rows="5" placeholder="返回值"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" onclick="saveTask()">保存</button>
+        <button type="button" class="btn btn-primary" onclick="saveApidoc()">保存</button>
       </div>
     </div>
   </div>
@@ -107,6 +91,10 @@
               <input type="text" class="form-control" id="projectIntro" value="{{project.intro}}" placeholder="项目描述">
             </div>
             <div class="form-group">
+              <label for="baseUrl">接口域名</label>
+              <input type="text" class="form-control" id="baseUrl" value="{{project.baseUrl}}" placeholder="接口域名">
+            </div>
+            <div class="form-group">
               <label for="">参与用户</label>
               <div class="row">
                 {% for item in users %}
@@ -128,12 +116,6 @@
 </div>
 {% endblock %}
 {% block page_js %}
-  {% if not is_pjax %}
-    <script src="/js/drag.js"></script>
-    <script>
-      dragTask();
-    </script>
-  {% endif %}
   <script>
     $("#deadline").datetimepicker({
       format: 'YYYY-MM-DD HH:mm:ss'
@@ -143,8 +125,9 @@
     {% endfor %}
     // 触发fetch task事件
     setTimeout(function() {
-      ws.emit('data', {code: 905, detail: {projectId: {{project.id}}}});
+      ws.emit('data', {code: 915, detail: {projectId: {{project.id}}}});
     }, 500);
+    addParamsRow();
     // 更新项目
     function updateProject() {
       // 收集选中的用户checkbox
@@ -155,9 +138,14 @@
 
       let name = $("#projectName").val();
       let intro = $("#projectIntro").val();
+      let baseUrl = $("#baseUrl").val();
 
       if (name.length === 0) {
-        alert("请输入项目名");
+        alert("项目名不能为空");
+        return;
+      }
+      if (baseUrl.length === 0) {
+        alert("接口域名不能为空");
         return;
       }
       if (joinUsers.length === 0) {
@@ -165,35 +153,55 @@
         return;
       }
 
-      ws.emit('data', {code: 908, detail: {
+      ws.emit('data', {code: 918, detail: {
         id: {{project.id}},
         name: name,
         intro: intro,
+        baseUrl: baseUrl,
         joinUsers: joinUsers,
-        type: 'project'
+        type: 'apidoc'
       }})
       $("#modalCloseBtnUpdate").click();
     }
     // 保存任务
-    function saveTask() {
+    function saveApidoc() {
       let projectId = $("#projectId").val();
       let name = $("#name").val();
-      let intro = $("#intro").val();
-      let deadline = $("#deadline").val();
+      let method = $("#method").val();
+      let path = $("#path").val();
+      let returnContent = $("#returnContent").val();
       if (name.length === 0) {
         alert("任务名不能为空");
         return;
       }
+      if (path.length === 0) {
+        alert("路径不能为空");
+        return;
+      }
+      if (returnContent.length === 0) {
+        alert("返回值不能为空");
+        return;
+      }
+      let params = [];
+      _.each($("#params_div").find('.row'), item => {
+        params.push({
+          paramName: $(item).find('input[type="text"]:eq(0)').val(),
+          paramType: $(item).find('select:eq(0)').val(),
+          paramIntro: $(item).find('input[type="text"]:eq(1)').val(),
+        });
+      });
       ws.emit('data', {
-        code: 904,
+        code: 916,
         detail: {
           projectId: projectId,
           name: name,
-          intro: intro,
-          deadline: deadline,
-          executor: $("#executor").val()
+          method: method,
+          path: path,
+          returnContent: returnContent,
+          params: params
         }
       });
+      $("#params_div").html(paramsTemplate)
       $("#modal_form")[0].reset();
       $("#modalCloseBtn").click();
     }

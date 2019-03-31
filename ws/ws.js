@@ -1,5 +1,6 @@
 const task_ws = require('./task_ws');
 const project_ws = require('./project_ws');
+const apidoc_ws = require('./apidoc_ws');
 const user_servie = require('../services/user_service');
 const result = require('../utils/result');
 const config = require('../config');
@@ -37,7 +38,16 @@ module.exports = (io) => {
       console.log(`payload: ${JSON.stringify(result.detail)}`);
       if (result.code === config.wsCode.CREATE_PROJECT) {
         // create project
-        project_ws.createProject(io, socket_users, payload.name, payload.intro, payload.joinUsers, userId);
+        project_ws.createProject(
+          io,
+          socket_users,
+          payload.name,
+          payload.intro,
+          null,
+          payload.joinUsers,
+          payload.type,
+          userId
+        );
       } else if (result.code === config.wsCode.CREATE_TASK) {
         // create task
         task_ws.createTask(
@@ -55,15 +65,66 @@ module.exports = (io) => {
       } else if (result.code === config.wsCode.FETCH_TASK) {
         task_ws.task(socket, payload.taskId);
       } else if (result.code === config.wsCode.FETCH_PROJECTS) {
-        project_ws.myProjects(socket, userId);
+        project_ws.myProjects(socket, payload.type, userId);
       } else if (result.code === config.wsCode.UPDATE_STATUS) {
         task_ws.updateStatus(io, socket_users, payload.taskId, payload.status, userId);
       } else if (result.code === config.wsCode.UPDATE_PROJECT) {
-        project_ws.updateProject(io, socket_users, payload.id, payload.name, payload.intro, payload.joinUsers, userId);
+        project_ws.updateProject(
+          io,
+          socket_users,
+          payload.id,
+          payload.name,
+          payload.intro,
+          null,
+          payload.joinUsers,
+          payload.type,
+          userId
+        );
       } else if (result.code === config.wsCode.CREATE_TASK_MESSAGE) {
         task_ws.createTaskMessage(io, socket_users, payload.taskId, payload.content, payload.mentionUserIds, userId);
       } else if (result.code === config.wsCode.FETCH_MY_TASKS) {
         task_ws.myTask(socket, userId);
+      } else if (result.code === config.wsCode.FETCH_APIDOCS) {
+        project_ws.myProjects(socket, payload.type, userId);
+      } else if (result.code === config.wsCode.CREATE_PROJECT) {
+        project_ws.createProject(
+          io,
+          socket_users,
+          payload.name,
+          payload.intro,
+          payload.baseUrl,
+          payload.joinUsers,
+          payload.type,
+          userId
+        );
+      } else if (result.code === config.wsCode.UPDATE_APIDOC) {
+        project_ws.updateProject(
+          io,
+          socket_users,
+          payload.id,
+          payload.name,
+          payload.intro,
+          payload.baseUrl,
+          payload.joinUsers,
+          payload.type,
+          userId
+        );
+      } else if (result.code === config.wsCode.CREATE_APIDOC) {
+        apidoc_ws.createApidoc(
+          io,
+          socket_users,
+          payload.name,
+          payload.method,
+          payload.path,
+          payload.returnContent,
+          payload.params,
+          payload.projectId,
+          userId
+        );
+      } else if (result.code === config.wsCode.FETCH_APIDOC) {
+        apidoc_ws.findApidoc(socket, payload.projectId);
+      } else if (result.code === config.wsCode.DELETE_APIDOC) {
+        apidoc_ws.deleteApidoc(io, socket_users, payload.id, payload.projectId);
       }
     });
   });

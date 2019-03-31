@@ -26,6 +26,17 @@ const project_model = sequelize.define(
       allowNull: false,
       defaultValue: 0,
       comment: '当前项目的任务数'
+    },
+    baseUrl: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      comment: '只有接口项目才会要求填这个数据，表示每个接口项目请求接口的域名'
+    },
+    type: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: 'project', // project, apidoc
+      comment: '区分是任务项目还是接口项目'
     }
   },
   {

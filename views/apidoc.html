@@ -7,7 +7,7 @@
   <li>
     <a data-pjax href="/">Home</a>
   </li>
-  <li class="active">我参与的项目</li>
+  <li class="active">我参与的接口文档</li>
   {% if _user.department %}
     <button type="button" class="btn btn-xs btn-primary pull-right" data-toggle="modal" href='#modal-id'>创建项目</button>
   {% endif %}
@@ -34,15 +34,10 @@
             <label for="">描述</label>
             <input type="text" class="form-control" id="intro" placeholder="描述">
           </div>
-          {# <div class="form-group">
-            <label for="department">部门</label>
-            <select name="departmentId" id="departmentId" class="form-control">
-              <option value="">请选择部门</option>
-              {% for item in departments %}
-                <option value="{{item.id}}">{{item.name}}</option>
-              {% endfor %}
-            </select>
-          </div> #}
+          <div class="form-group">
+            <label for="">接口域名</label>
+            <input type="text" class="form-control" id="baseUrl" placeholder="接口域名，后面不要带/">
+          </div>
           <div class="form-group">
               <label for="">参与用户</label>
               <div class="row">
@@ -67,10 +62,11 @@
 {% block page_js %}
   <script>
     setTimeout(function() {
-      ws.emit('data', {code: 906, detail: {type: 'project'}});
+      ws.emit('data', {code: 914, detail: {type: 'apidoc'}});
     }, 500);
     function saveProject() {
       let name = $("#name").val();
+      let baseUrl = $("#baseUrl").val();
       let intro = $("#intro").val();
       let departmentId = $("#departmentId").val();
       // 收集选中的用户checkbox
@@ -82,7 +78,11 @@
         alert("项目名不能为空");
         return;
       }
-      ws.emit('data', {code: 903, detail: {name: name, intro: intro, joinUsers: joinUsers, type: 'project'}});
+      if (baseUrl.length === 0) {
+        alert("接口域名不能为空");
+        return;
+      }
+      ws.emit('data', {code: 903, detail: {name: name, intro: intro, joinUsers: joinUsers, baseUrl: baseUrl, type: 'apidoc'}});
       $("#modal_form")[0].reset();
       $("#modalCloseBtn").click();
     }

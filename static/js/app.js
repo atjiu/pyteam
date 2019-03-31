@@ -39,6 +39,12 @@ function shouldUpdate(data) {
     if (currentPath === '/my_task') {
       renderTasks(data);
     }
+  } else if (data.code === 917 && currentPath === '/apidoc') {
+    renderApidocs(data);
+  } else if (data.code === 919) {
+    if (currentPath === `/apidoc/${data.detail.project.id}`) {
+      renderApidoc(data);
+    }
   }
 }
 
@@ -160,4 +166,119 @@ function sendTaskMessage(event) {
     event.target.value = '';
     mentionUserIds = [];
   }
+}
+
+function renderApidocs(data) {
+  let divs = _.map(data.detail.projects, (project) => {
+    return `
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <a data-pjax href="/apidoc/${project.id}">
+          <div class="well well-sm" style="background-color: #fff;">
+            <h4>${project.name}</h4>
+            <p>
+              创建人：${project.creatorUser.username}&nbsp;&nbsp;
+            </p>
+            <p>
+              ${project.intro ? project.intro : ''}&nbsp;
+            </p>
+          </div>
+        </a>
+      </div>`;
+  }).join('');
+  $('#projects_div').html(divs);
+}
+
+function renderApidoc(data) {
+  $('#apidoc_list_div').html(`
+    ${_.map(
+      data.detail.apidocs,
+      (item) => `
+      <a class="list-group-item" href="javascript:;" onclick="showApidocDetail('${item.id}')">
+        ${item.name}
+        <button class="btn btn-danger btn-xs pull-right" type="button" onclick="deleteApidoc('${item.id}', '${item
+        .project.id}')">删除</button>
+      </a>
+    `
+    ).join('')}`);
+  $('#apidoc_detail_div').html(
+    _.map(data.detail.apidocs, (item, index) => {
+      let paramsHtml = _.map(
+        JSON.parse(item.params),
+        (item) => `<li>${item.paramName}&nbsp;&nbsp;${item.paramType}&nbsp;&nbsp;${item.paramIntro}</li>`
+      ).join('');
+      let isHidden = index === 0 ? '' : 'hidden';
+      return `
+      <table class="table table-bordered ${isHidden}" id="apidoc_detail_table_${item.id}">
+        <tbody>
+          <tr>
+            <th>名称</th>
+            <td>${item.name}</td>
+          </tr>
+          <tr>
+            <th>请求类型</th>
+            <td>${item.method}</td>
+          </tr>
+          <tr>
+            <th>请求地址</th>
+            <td>${item.project.baseUrl}${item.path}</td>
+          </tr>
+          <tr>
+            <th>请求参数</th>
+            <td>
+              <ul>
+                ${paramsHtml}
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th>返回值</th>
+            <td><pre><code>${item.returnContent}</code></pre></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    })
+  );
+}
+
+function showApidocDetail(id) {
+  $.each($('#apidoc_detail_div>table'), (index, item) => $(item).addClass('hidden'));
+  $(`#apidoc_detail_table_${id}`).removeClass('hidden');
+}
+
+function deleteApidoc(id, projectId) {
+  if (confirm('确定要删除这个文档吗？')) {
+    ws.emit('data', { code: 920, detail: { id: id, projectId: projectId } });
+  }
+}
+
+let paramsTemplate = `
+  <div class="row" style="margin: 5px 0;">
+    <div class="col-md-1 text-right text-danger" style="margin-top: 7px; cursor: pointer;">
+      <span class="glyphicon glyphicon-remove" onclick="removeParamsRow(this)"></span>
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="paramName" class="form-control" placeholder="参数名"/>
+    </div>
+    <div class="col-md-3">
+      <select name="paramType" class="form-control">
+        <option value="String">string</option>
+        <option value="int">int</option>
+        <option value="file">file</option>
+        <option value="boolean">boolean</option>
+        <option value="double">double</option>
+        <option value="float">float</option>
+        <option value="char">char</option>
+      </select>
+    </div>
+    <div class="col-md-5">
+      <input type="text" name="paramIntro" class="form-control" placeholder="参数说明"/>
+    </div>
+  </div>
+`;
+function addParamsRow() {
+  $('#params_div').append(paramsTemplate);
+}
+function removeParamsRow(_this) {
+  $(_this).parent().parent().remove();
 }

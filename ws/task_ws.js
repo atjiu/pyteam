@@ -56,7 +56,7 @@ async function emitTaskData(io, socket_users, taskId) {
   for (index in waitEmitUsers) {
     let userId = parseInt(waitEmitUsers[index].userId);
     let socketId = waitEmitUsers[index].socketId;
-    let projects = await project_service.findByUserId(userId);
+    let projects = await project_service.findByUserId(userId, 'project');
     let myTasks = await task_service.findByExecutor(userId);
     io.to(socketId).emit('data', result(config.wsCode.PROJECTS, null, { projects: projects }));
     io.to(socketId).emit('data', result(config.wsCode.TASKS, null, { projectId: task.projectId, tasks: tasks }));

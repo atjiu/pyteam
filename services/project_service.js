@@ -10,13 +10,13 @@ exports.findById = async (id) => {
   return await project_model.findOne({ include: [ { all: true } ], where: { id: id } });
 };
 
-exports.findByUserId = async (userId) => {
+exports.findByUserId = async (userId, type) => {
   let project_users = await project_user_model.findAll({ where: { userId: userId } });
   let projectIds = await project_users.map((pu) => pu.projectId);
-  return await project_model.findAll({ include: [ { all: true } ], where: { id: projectIds } });
+  return await project_model.findAll({ include: [ { all: true } ], where: { id: projectIds, type: type } });
 };
 
-exports.create = async (name, intro, joinUsers, userId) => {
+exports.create = async (name, intro, baseUrl, joinUsers, type, userId) => {
   // 开户事务，失败回滚
   await sequelize.transaction({ autocommit: true }, async (t) => {
     let user = await user_service.findById(userId);
@@ -25,6 +25,8 @@ exports.create = async (name, intro, joinUsers, userId) => {
         name: name,
         intro: intro,
         creator: userId,
+        type: type,
+        baseUrl: baseUrl,
         departmentId: user.departmentId
       },
       { transaction: t }
@@ -47,13 +49,14 @@ exports.findAll = async (opt) => {
   return await project_model.findAll(opt);
 };
 
-exports.update = async (id, name, intro, userIds) => {
+exports.update = async (id, name, intro, baseUrl, userIds) => {
   // 开户事务，失败回滚
   await sequelize.transaction({ autocommit: true }, async (t) => {
     await project_model.update(
       {
         name: name,
-        intro: intro
+        intro: intro,
+        baseUrl: baseUrl
       },
       { where: { id: id }, transaction: t }
     );

@@ -8,6 +8,7 @@ const admin_filter = require('../filters/admin_filter');
 const index_route = require('./index_route');
 const project_route = require('./project_route');
 const task_route = require('./task_route');
+const apidoc_route = require('./apidoc_route');
 
 // admin route
 const index_admin_route = require('./admin/index_admin_route');
@@ -26,6 +27,9 @@ router.get('/project', login_filter.is_login, project_route.index);
 router.get('/project/:id', login_filter.is_login, project_route.detail);
 router.get('/project/:projectId/task/:taskId', login_filter.is_login, task_route.index);
 router.get('/my_task', login_filter.is_login, task_route.my_task);
+
+router.get('/apidoc', login_filter.is_login, apidoc_route.index);
+router.get('/apidoc/:id', login_filter.is_login, apidoc_route.detail);
 
 // ------------------------------------------------------------------------------------
 router.get('/admin/index', login_filter.is_login, admin_filter.is_admin, index_admin_route.index);
