@@ -46,6 +46,7 @@ function shouldUpdate(data) {
       renderApidoc(data);
     }
   }
+  $('.spinner').hide();
 }
 
 function renderProjects(data) {

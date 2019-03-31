@@ -17,6 +17,7 @@
 {% endblock %}
 {% block page_js %}
   <script>
+    $('.spinner').show();
     setTimeout(function() {
       ws.emit('data', { code: 909, detail: { taskId: {{task.id}} } });
     }, 500);

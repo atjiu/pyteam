@@ -45,6 +45,7 @@
 {% endblock %}
 {% block page_js %}
   <script>
+    $('.spinner').show();
     setTimeout(function() {
       ws.emit('data', { code: 912, detail: { } });
     }, 500);

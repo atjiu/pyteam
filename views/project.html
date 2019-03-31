@@ -142,6 +142,7 @@
       $("#joinUser_{{item.id}}").prop('checked', true);
     {% endfor %}
     // 触发fetch task事件
+    $('.spinner').show();
     setTimeout(function() {
       ws.emit('data', {code: 905, detail: {projectId: {{project.id}}}});
     }, 500);

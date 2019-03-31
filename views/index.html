@@ -66,6 +66,7 @@
 {% endblock %}
 {% block page_js %}
   <script>
+    $('.spinner').show();
     setTimeout(function() {
       ws.emit('data', {code: 906, detail: {type: 'project'}});
     }, 500);
