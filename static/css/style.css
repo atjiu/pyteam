@@ -81,3 +81,7 @@ body {
   list-style: square;
   padding-left: 20px;
 }
+
+#projects_div [class^=col-] {
+  height: 200px;
+}
