@@ -33,7 +33,6 @@
           username: username,
           password: password
         }, function(data) {
-          console.log(data);
           if (data.code === 200) {
             localStorage.setItem('token', data.detail.token);
             location.href = '/';

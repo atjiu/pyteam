@@ -43,7 +43,6 @@ app.use(
       return marked(content);
     });
     env.addFilter('fromNow', (time) => {
-      console.log(time);
       return moment(time).fromNow();
     });
   })
