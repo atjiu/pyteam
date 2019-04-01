@@ -32,7 +32,13 @@
         {% for item in projects %}
           <tr>
             <td>{{item.id}}</td>
-            <td><a href="/project/{{item.id}}" data-pjax>{{item.name}}</a></td>
+            <td>
+              {% if item.type === 'project' %}
+                <a href="/project/{{item.id}}" data-pjax>{{item.name}}</a>
+              {% elif item.type === 'apidoc' %}
+                <a href="/apidoc/{{item.id}}" data-pjax>{{item.name}}</a>
+              {% endif %}
+            </td>
             <td>
               {% if item.type === 'project' %}
                 项目
