@@ -18,7 +18,6 @@ module.exports = (io) => {
     await user_servie.bind(userId, true, socketId);
     socket.emit('message', result(config.errorCode.SUCCESS, '当前登录帐号与socket.io绑定成功', null));
     console.log(`${username} 上线了!`);
-    console.log('bind', JSON.stringify(socket_users));
     // 用户关闭浏览器后失去连接更新用户的状态
     socket.on('disconnect', async () => {
       let user = await user_servie.findBySocketId(socketId);
@@ -26,12 +25,10 @@ module.exports = (io) => {
         await remove(socket_users, { socketId: socketId });
         await user_servie.bind(user.id, false, null);
         console.log(`${user.username} 下线了!`);
-        console.log('disconnect', JSON.stringify(socket_users));
       }
     });
 
     socket.on('data', async (result) => {
-      console.log('data', JSON.stringify(socket_users));
       let socket_user = await find(socket_users, { socketId: socket.id });
       let payload = result.detail;
       let userId = socket_user.userId;

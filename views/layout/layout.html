@@ -53,6 +53,7 @@
           username: '{{_user.username}}'
         }
       });
+      sessionStorage.setItem('username', '{{_user.username}}');
       ws.on('disconnect', function() {
         console.log(`{{_user.username}} 失去连接！`);
       })

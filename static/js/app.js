@@ -326,7 +326,7 @@ function uploadFile(id) {
           code: 911,
           detail: {
             taskId: id,
-            content: `{{_user.username}}添加了${files.length}个附件`,
+            content: `${sessionStorage.getItem('username')}添加了${files.length}个附件`,
             mentionUserIds: []
           }
         });
