@@ -15,9 +15,15 @@ exports.tasks = async (socket, projectId) => {
 exports.task = async (socket, taskId) => {
   let { task, task_dynamics, project_users } = await task_service.findById(taskId);
   task.intro = marked(task.intro);
+  let attachments = await task_service.findAttachments(taskId);
   socket.emit(
     'data',
-    result(config.wsCode.TASK, null, { task: task, task_dynamics: task_dynamics, project_users: project_users })
+    result(config.wsCode.TASK, null, {
+      task: task,
+      task_dynamics: task_dynamics,
+      project_users: project_users,
+      attachments: attachments
+    })
   );
 };
 
@@ -58,9 +64,15 @@ async function emitTaskData(io, socket_users, taskId) {
     let socketId = waitEmitUsers[index].socketId;
     let projects = await project_service.findByUserId(userId, 'project');
     let myTasks = await task_service.findByExecutor(userId);
+    let attachments = await task_service.findAttachments(taskId);
     io.to(socketId).emit('data', result(config.wsCode.PROJECTS, null, { projects: projects }));
     io.to(socketId).emit('data', result(config.wsCode.TASKS, null, { projectId: task.projectId, tasks: tasks }));
-    io.to(socketId).emit('data', result(config.wsCode.TASK, null, { task: task, task_dynamics: task_dynamics }));
+    io
+      .to(socketId)
+      .emit(
+        'data',
+        result(config.wsCode.TASK, null, { task: task, task_dynamics: task_dynamics, attachments: attachments })
+      );
     io.to(socketId).emit('data', result(config.wsCode.MY_TASKS, null, { tasks: myTasks }));
   }
 }

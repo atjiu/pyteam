@@ -8,8 +8,6 @@
   </li>
   <li><a data-pjax href="/project/{{task.project.id}}">{{task.project.name}}</a></li>
   <li class="active">{{task.name}}</li>
-  <button type="button" class="btn btn-primary btn-xs pull-right" onclick="toUploadFile()">上传附件</button>
-  <input type="file" class="hidden" id="uploadFileInput" multiple onchange="uploadFile()"/>
 </ol>
 
 <div id="task_detail_div"></div>
@@ -24,29 +22,5 @@
     setTimeout(function() {
       ws.emit('data', { code: 909, detail: { taskId: {{task.id}} } });
     }, 500);
-
-    function toUploadFile() {
-      $("#uploadFileInput").click();
-    }
-
-    function uploadFile() {
-      let files = document.getElementById('uploadFileInput').files;
-      let fd = new FormData();
-      fd.append('files', files);
-      $.post({
-        url: "/uploadFile",
-        data: fd,
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.code === 200) {
-            console.log(data);
-          } else {
-            alert(data.description);
-          }
-        }
-      })
-    }
   </script>
 {% endblock %}

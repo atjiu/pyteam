@@ -2,6 +2,11 @@ const result = require('../utils/result');
 const config = require('../config');
 const user_service = require('../services/user_service');
 const department_service = require('../services/department_service');
+const md5 = require('md5');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const fs = require('fs');
+const file_util = require('../utils/file_util');
 
 exports.index = async (ctx) => {
   let user = ctx.session.user;
@@ -95,4 +100,31 @@ exports.process_register = async (ctx) => {
 exports.logout = async (ctx) => {
   ctx.session.user = null;
   await ctx.redirect('/');
+};
+
+exports.uploadFile = async (ctx) => {
+  try {
+    const files = ctx.request.files.files;
+    const taskId = ctx.request.body.taskId;
+    // 创建文件夹，上传附件以task为单位，存放在 /static/attachment/ 下
+    // 如果任务id是1，那么路径就是 /static/attachment/task/1/
+    let uploadPath = path.join(`${config.attachment_dir}/task/${taskId}`);
+    if (!fs.existsSync(uploadPath)) mkdirp.sync(`${uploadPath}`);
+    if (files.length) {
+      for (let i = 0; i < files.length; i++) {
+        let name = files[i].name;
+        // let ext = name.split('.').pop();
+        let filePath = path.join(`${uploadPath}/${name}`);
+        await file_util.uploadFile(files[i], filePath);
+      }
+    } else {
+      let name = files.name;
+      // let ext = name.split('.').pop();
+      let filePath = path.join(`${uploadPath}/${name}`);
+      await file_util.uploadFile(files, filePath);
+    }
+    ctx.body = result(config.errorCode.SUCCESS, 'success', null);
+  } catch (err) {
+    ctx.body = result(config.errorCode.FAILURE, err.message, null);
+  }
 };

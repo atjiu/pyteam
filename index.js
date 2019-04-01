@@ -47,12 +47,14 @@ app.use(
     });
   })
 );
-app.use(koaBody({
-  multipart: true,
-  formidable: {
-    maxFileSize: 200 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
-  }
-}));
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      maxFileSize: 100 * 1024 * 1024 // 设置上传文件大小最大限制，默认100M
+    }
+  })
+);
 
 // ctx.state
 app.use(async (ctx, next) => {

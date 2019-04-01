@@ -22,6 +22,7 @@ router.get('/register', index_route.register);
 router.post('/login', index_route.process_login);
 router.post('/register', index_route.process_register);
 router.get('/logout', index_route.logout);
+router.post('/uploadFile', login_filter.is_login, index_route.uploadFile);
 
 router.get('/project', login_filter.is_login, project_route.index);
 router.get('/project/:id', login_filter.is_login, project_route.detail);

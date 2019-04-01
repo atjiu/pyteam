@@ -1,3 +1,5 @@
+const path = require('path');
+
 const port = 3002;
 let is_production = process.env.NODE_ENV === 'production' ? true : false;
 module.exports = {
@@ -5,6 +7,7 @@ module.exports = {
   base_url: is_production ? 'https://team.yiiu.co' : `http://localhost:${port}`,
   ws_url: is_production ? 'https://team.yiiu.co' : `http://localhost:${port}`,
   ws_secure: is_production,
+  attachment_dir: path.join(__dirname, 'static', 'attachments'),
   admins: [ 'admin' ], // 管理员用户名
   mysql: is_production
     ? {

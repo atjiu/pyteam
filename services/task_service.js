@@ -4,6 +4,7 @@ const config = require('../config');
 const moment = require('../utils/moment');
 const task_dynamic_service = require('./task_dynamic_service');
 const project_user_service = require('./project_user_service');
+const fs = require('fs');
 
 let task_model = models.task_model,
   project_model = models.project_model,
@@ -74,4 +75,20 @@ exports.createTaskMessage = async (taskId, content, mentionUserIds, userId) => {
 
 exports.findByExecutor = async (userId) => {
   return await task_model.findAll({ include: [ { all: true } ], where: { executor: userId } });
+};
+
+exports.findAttachments = async (taskId) => {
+  // 查找任务的附件
+  if (fs.existsSync(`${config.attachment_dir}/task/${taskId}`)) {
+    let attachmentFiles = await fs.readdirSync(`${config.attachment_dir}/task/${taskId}`);
+    return await attachmentFiles.map((item) => {
+      return {
+        name: item,
+        ext: item.split('.').pop(),
+        url: `${config.base_url}/attachments/task/${taskId}/${item}`
+      };
+    });
+  } else {
+    return [];
+  }
 };

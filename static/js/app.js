@@ -102,6 +102,7 @@ function tasksTemplate(task) {
 
 function renderTask(data) {
   let task = data.detail.task;
+  let attachments = data.detail.attachments;
   let task_dynamics = data.detail.task_dynamics;
   let project_users = data.detail.project_users;
   $('#task_detail_div').html(`
@@ -130,6 +131,22 @@ function renderTask(data) {
       </tbody>
     </table>
   `);
+  // 渲染附件
+  let attachmentLis = _.map(attachments, (item) => {
+    let isImage = item.ext === 'jpg' || item.ext === 'jpeg' || item.ext === 'png' || item.ext === 'gif';
+    return `
+        <li><a href="${item.url}" ${isImage ? 'target="_blank"' : 'download'}>${item.name}</a></li>
+      `;
+  }).join('');
+  if (attachments.length === 0) {
+    attachmentLis = `<li>无</li>`;
+  }
+  $('#task_attachment_div').html(`
+    <p><span style="font-size: 18px;">附件</span> <button type="button" class="btn btn-primary btn-xs pull-right" onclick="toUploadFile()">上传附件</button></p>
+    <input type="file" class="hidden" id="uploadFileInput" multiple onchange="uploadFile(${task.id})"/>
+    <ul style="margin-bottom: 20px;">${attachmentLis}</ul>
+  `);
+  // 渲染任务动态
   let lis = _.map(
     task_dynamics,
     (item) =>
@@ -282,4 +299,40 @@ function addParamsRow() {
 }
 function removeParamsRow(_this) {
   $(_this).parent().parent().remove();
+}
+
+function toUploadFile() {
+  $('#uploadFileInput').click();
+}
+
+function uploadFile(id) {
+  let files = document.getElementById('uploadFileInput').files;
+  let fd = new FormData();
+  fd.append('taskId', id);
+  //fd.append('files', files);
+  for (let i = 0; i < files.length; i++) {
+    fd.append(`files`, files[i]);
+  }
+  $.post({
+    url: '/uploadFile',
+    data: fd,
+    dataType: 'json',
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      if (data.code === 200) {
+        // 上传成功，通知其它用户
+        ws.emit('data', {
+          code: 911,
+          detail: {
+            taskId: id,
+            content: `{{_user.username}}添加了${files.length}个附件`,
+            mentionUserIds: []
+          }
+        });
+      } else {
+        alert(data.description);
+      }
+    }
+  });
 }
