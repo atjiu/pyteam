@@ -21,6 +21,7 @@
         <tr>
           <th>ID</th>
           <th>项目名</th>
+          <th>类型</th>
           <th>部门</th>
           <th>创建时间</th>
           <th>创建者</th>
@@ -32,6 +33,13 @@
           <tr>
             <td>{{item.id}}</td>
             <td><a href="/project/{{item.id}}" data-pjax>{{item.name}}</a></td>
+            <td>
+              {% if item.type === 'project' %}
+                项目
+              {% elif item.type === 'apidoc' %}
+                接口文档
+              {% endif %}
+            </td>
             <td>{{item.department.name}}</td>
             <td>{{item.createdAt | fromNow}}</td>
             <td>{{item.creatorUser.username}}</td>
