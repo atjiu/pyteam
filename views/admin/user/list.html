@@ -21,6 +21,7 @@
         <tr>
           <th>ID</th>
           <th>用户名</th>
+          <th>在线</th>
           <th>部门</th>
           <th>注册时间</th>
           <th>操作</th>
@@ -31,6 +32,13 @@
           <tr>
             <td>{{item.id}}</td>
             <td>{{item.username}}</td>
+            <td {% if item.online %}class="success"{% else %}class="danger"{% endif %}>
+              {% if item.online %}
+                在线
+              {% else %}
+                离线
+              {% endif %}
+            </td>
             <td>{{item.department.name}}</td>
             <td>{{item.createdAt | fromNow}}</td>
             <td>
