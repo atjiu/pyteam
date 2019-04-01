@@ -43,7 +43,7 @@ module.exports = (io) => {
           socket_users,
           payload.name,
           payload.intro,
-          null,
+          payload.baseUrl,
           payload.joinUsers,
           payload.type,
           userId
@@ -75,7 +75,7 @@ module.exports = (io) => {
           payload.id,
           payload.name,
           payload.intro,
-          null,
+          payload.baseUrl,
           payload.joinUsers,
           payload.type,
           userId

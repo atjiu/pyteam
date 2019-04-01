@@ -26,7 +26,6 @@ exports.updateProject = async (io, socket_users, id, name, intro, baseUrl, joinU
   let project_users = await project_user_service.findByProjectId(id);
   let oldUserIds = await project_users.map((item) => item.user.id.toString());
   await project_service.update(id, name, intro, baseUrl, joinUsers);
-  console.log('updateproject', type);
   emitProjectMessage(io, socket_users, joinUsers, oldUserIds, userId, type);
 };
 
