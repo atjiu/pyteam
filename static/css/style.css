@@ -85,3 +85,9 @@ body {
 #projects_div [class^=col-] {
   height: 200px;
 }
+
+@media (max-width: 768px) {
+  #projects_div [class^=col-] {
+    height: auto;
+  }
+}
