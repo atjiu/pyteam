@@ -20,14 +20,12 @@
     "koa-session": "^5.10.1",
     "koa-static": "^5.0.0",
     "marked": "^0.6.1",
-    "md5": "^2.2.1",
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
     "mysql2": "^1.6.5",
     "nunjucks": "^3.2.0",
     "sequelize": "^5.1.0",
-    "socket.io": "^2.2.0",
-    "uuid": "^3.3.2"
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "cross-env": "^5.2.0"

@@ -2,7 +2,6 @@ const result = require('../utils/result');
 const config = require('../config');
 const user_service = require('../services/user_service');
 const department_service = require('../services/department_service');
-const md5 = require('md5');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const fs = require('fs');
