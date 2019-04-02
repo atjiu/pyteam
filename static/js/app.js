@@ -47,7 +47,8 @@ function shouldUpdate(data) {
     }
   } else if (data.code === 921) {
     if (currentPath === '/chat') {
-      renderChatUsers(data);
+      sessionStorage.setItem('users', JSON.stringify(data.detail));
+      renderChatUsers();
     }
   } else if (data.code === 924) {
     let openChatUserId = sessionStorage.getItem('openChatUserId');
@@ -369,8 +370,9 @@ function uploadFile(id) {
   });
 }
 
-function renderChatUsers(data) {
-  let users = _.filter(data.detail.users, (item) => item.id !== parseInt(data.detail.userId));
+function renderChatUsers() {
+  let data = JSON.parse(sessionStorage.getItem('users'));
+  let users = _.filter(data.users, (item) => item.id !== parseInt(data.userId));
   let user_divs = _.map(
     users,
     (item) => `
@@ -393,7 +395,13 @@ function renderChatUsers(data) {
     </div>
     ${user_divs}
   `);
-  $('.chat_sidebar div:eq(0)').click();
+  let openChatUserId = sessionStorage.getItem('openChatUserId');
+  console.log(openChatUserId);
+  if (openChatUserId) {
+    $(`.chat_user_div[data-id='${openChatUserId}']`).click();
+  } else {
+    $('.chat_sidebar div:eq(0)').click();
+  }
 }
 
 function openChat(id) {
