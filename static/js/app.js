@@ -396,7 +396,6 @@ function renderChatUsers() {
     ${user_divs}
   `);
   let openChatUserId = sessionStorage.getItem('openChatUserId');
-  console.log(openChatUserId);
   if (openChatUserId) {
     $(`.chat_user_div[data-id='${openChatUserId}']`).click();
   } else {
