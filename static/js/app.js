@@ -400,7 +400,7 @@ function openChat(id) {
   sessionStorage.setItem('openChatUserId', id);
   ws.emit('data', {
     code: 923,
-    detail: { pageNo: 1, group: id === 0, beforeId: 0, userId: sessionStorage.getItem('userId'), targetUserId: id }
+    detail: { pageNo: 1, beforeId: 0, userId: sessionStorage.getItem('userId'), targetUserId: id }
   });
   $.each($(`.chat_user_div`), function(index, item) {
     $(item).css('background-color', '#fff');

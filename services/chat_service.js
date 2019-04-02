@@ -1,5 +1,7 @@
 const models = require('../models/models');
 const config = require('../config');
+const { Sequelize } = require('../models/db');
+const Op = Sequelize.Op;
 
 let chat_model = models.chat_model;
 
@@ -18,8 +20,8 @@ exports.findAllWithPaginate = async (pageNo, group, beforeId, userId, targetUser
       limit: config.pageSize
     });
   } else {
-    where.userId = { $or: [ userId, targetUserId ] };
-    where.targetUserId = { $or: [ userId, targetUserId ] };
+    where.userId = { [Op.or]: [ userId, targetUserId ] };
+    where.targetUserId = { [Op.or]: [ userId, targetUserId ] };
     if (beforeId > 0) {
       where.beforeId = { $lt: beforeId };
     }
