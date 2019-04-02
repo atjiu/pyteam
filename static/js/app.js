@@ -379,7 +379,7 @@ function renderChatUsers(data) {
         <span ${item.online ? 'style="color: greenyellow"' : 'style="color: gray"'}>•</span>
         <span>${item.username}</span>
       </div>
-      <div>${item.department.name}</div>
+      <div>${item.department ? item.department.name : '&nbsp;'}</div>
     </div>
   `
   ).join('');
