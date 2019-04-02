@@ -94,7 +94,7 @@ body {
 
 #chat_div .chat_header {
   height: 40px;
-  background-color: #222;
+  background-color: #ddd;
   color: #fff;
   line-height: 40px;
   padding-left: 15px;
@@ -104,14 +104,15 @@ body {
   background-color: #fff;
   display: flex;
   height: calc(100vh - 70px - 56px - 80px);
-  border-left: 2px solid #222;
-  border-right: 2px solid #222;
-  border-bottom: 2px solid #222;
+  border-left: 2px solid #ddd;
+  border-right: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
 }
 #chat_div .chat_container .chat_sidebar {
   height: calc(100vh - 70px - 56px - 80px);
   width: 200px;
-  border-right: 2px solid #222;
+  border-right: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -162,7 +163,7 @@ body {
 
 #chat_div .chat_container .chat_input {
   height: 100px;
-  border-top: 2px solid #222;
+  border-top: 2px solid #ddd;
   padding: 10px;
   outline: 0;
 }

@@ -1,6 +1,14 @@
 {% if not is_pjax %}
   {% extends "./layout/layout.html" %}
 {% endif %}
+{% block page_css %}
+<style>
+  [contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+  }
+</style>
+{% endblock %}
 {% block page_content %}
 
 <ol class="breadcrumb">
@@ -17,7 +25,7 @@
       <div class="chat_sidebar"></div>
       <div class="chat_right">
         <div class="chat_message"></div>
-        <div class="chat_input" id="content" contenteditable="true"></div>
+        <div class="chat_input" id="content" contenteditable="true" placeholder="CTRL + ENTER 发送"></div>
         <button type="button" class="btn btn-default btn-xs" onclick="send()">发送</button>
       </div>
     </div>
@@ -31,13 +39,18 @@
     setTimeout(function() {
       ws.emit('data', {code: 922, detail: {}});
     }, 500);
+    $("#content").on("keypress", function(event) {
+      if((event.ctrlKey || event.metaKey) && (event.keyCode == 13 || event.keyCode == 10)) {
+        send();
+      }
+    })
     function send() {
-      let content = $("#content").text();
+      let content = $("#content").html();
       if (content.trim().length === 0) {
         return;
       }
       ws.emit('data', {code: 925, detail: {content: content, targetUserId: sessionStorage.getItem('openChatUserId'), type: 'text'}})
-      $("#content").text('');
+      $("#content").html('');
     }
   </script>
 {% endblock %}
