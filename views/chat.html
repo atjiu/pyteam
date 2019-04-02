@@ -1,0 +1,43 @@
+{% if not is_pjax %}
+  {% extends "./layout/layout.html" %}
+{% endif %}
+{% block page_content %}
+
+<ol class="breadcrumb">
+  <li>
+    <a data-pjax href="/">Home</a>
+  </li>
+  <li class="active">聊天室</li>
+</ol>
+
+<div id="chat_div" class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="chat_header">聊天室</div>
+    <div class="chat_container">
+      <div class="chat_sidebar"></div>
+      <div class="chat_right">
+        <div class="chat_message"></div>
+        <div class="chat_input" id="content" contenteditable="true"></div>
+        <button type="button" class="btn btn-default btn-xs" onclick="send()">发送</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block page_js %}
+  <script>
+    $('.spinner').show();
+    setTimeout(function() {
+      ws.emit('data', {code: 922, detail: {}});
+    }, 500);
+    function send() {
+      let content = $("#content").text();
+      if (content.trim().length === 0) {
+        return;
+      }
+      ws.emit('data', {code: 925, detail: {content: content, targetUserId: sessionStorage.getItem('openChatUserId'), type: 'text'}})
+      $("#content").text('');
+    }
+  </script>
+{% endblock %}

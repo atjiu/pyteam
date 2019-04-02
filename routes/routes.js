@@ -9,6 +9,7 @@ const index_route = require('./index_route');
 const project_route = require('./project_route');
 const task_route = require('./task_route');
 const apidoc_route = require('./apidoc_route');
+const chat_route = require('./chat_route');
 
 // admin route
 const index_admin_route = require('./admin/index_admin_route');
@@ -23,6 +24,7 @@ router.post('/login', index_route.process_login);
 router.post('/register', index_route.process_register);
 router.get('/logout', index_route.logout);
 router.post('/uploadFile', login_filter.is_login, index_route.uploadFile);
+router.get('/chat', login_filter.is_login, chat_route.index);
 
 router.get('/project', login_filter.is_login, project_route.index);
 router.get('/project/:id', login_filter.is_login, project_route.detail);

@@ -45,6 +45,38 @@ function shouldUpdate(data) {
     if (currentPath === `/apidoc/${data.detail.project.id}`) {
       renderApidoc(data);
     }
+  } else if (data.code === 921) {
+    if (currentPath === '/chat') {
+      renderChatUsers(data);
+    }
+  } else if (data.code === 924) {
+    let openChatUserId = sessionStorage.getItem('openChatUserId');
+    if (currentPath === '/chat' && parseInt(openChatUserId) === data.detail.targetUserId) {
+      data.detail.chats.reverse();
+      sessionStorage.setItem(`chat_${openChatUserId}`, JSON.stringify(data.detail));
+      if (openChatUserId !== '0') {
+        sessionStorage.setItem(`chat_${data.detail.userId}`, JSON.stringify(data.detail));
+      }
+      renderChatMessage();
+    }
+  } else if (data.code === 926) {
+    let targetChatObj = JSON.parse(sessionStorage.getItem(`chat_${data.detail.targetUserId}`));
+    targetChatObj.chats.push(data.detail.chat);
+    sessionStorage.setItem(`chat_${data.detail.targetUserId}`, JSON.stringify(targetChatObj));
+
+    if (data.detail.targetUserId != '0') {
+      let chatObj = JSON.parse(sessionStorage.getItem(`chat_${data.detail.userId}`));
+      chatObj.chats.push(data.detail.chat);
+      sessionStorage.setItem(`chat_${data.detail.userId}`, JSON.stringify(chatObj));
+    }
+
+    let openChatUserId = sessionStorage.getItem('openChatUserId');
+    if (
+      currentPath === '/chat' &&
+      (openChatUserId === data.detail.targetUserId || openChatUserId === data.detail.userId)
+    ) {
+      renderChatMessage();
+    }
   }
   $('.spinner').hide();
 }
@@ -335,4 +367,70 @@ function uploadFile(id) {
       }
     }
   });
+}
+
+function renderChatUsers(data) {
+  let users = _.filter(data.detail.users, (item) => item.id !== parseInt(data.detail.userId));
+  let user_divs = _.map(
+    users,
+    (item) => `
+    <div class="chat_user_div" data-id='${item.id}' onclick="openChat(${item.id})">
+      <div>
+        <span ${item.online ? 'style="color: greenyellow"' : 'style="color: gray"'}>•</span>
+        <span>${item.username}</span>
+      </div>
+      <div>${item.department.name}</div>
+    </div>
+  `
+  ).join('');
+  $('.chat_sidebar').html(`
+    <div class="chat_user_div" data-id='0' onclick="openChat(0)">
+      <div>
+        <span style="color: greenyellow">•</span>
+        <span>广播室</span>
+      </div>
+      <div>&nbsp;</div>
+    </div>
+    ${user_divs}
+  `);
+  $('.chat_sidebar div:eq(0)').click();
+}
+
+function openChat(id) {
+  sessionStorage.setItem('openChatUserId', id);
+  ws.emit('data', {
+    code: 923,
+    detail: { pageNo: 1, group: id === 0, beforeId: 0, userId: sessionStorage.getItem('userId'), targetUserId: id }
+  });
+  $.each($(`.chat_user_div`), function(index, item) {
+    $(item).css('background-color', '#fff');
+  });
+  $(`.chat_user_div[data-id='${id}']`).css('background-color', '#eee');
+}
+
+function renderChatMessage() {
+  let data = JSON.parse(sessionStorage.getItem(`chat_${sessionStorage.getItem('openChatUserId')}`));
+  let message_divs = _.map(data.chats, (item) => {
+    let mine = parseInt(data.userId) === parseInt(item.user.id);
+    if (mine) {
+      return `
+        <div class="text-right">
+          <div class="chat_user_info">${moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')} ${item.user
+        .username}</div>
+          <div class="chat_content">${item.content}</div>
+        </div>
+      `;
+    } else {
+      return `
+        <div>
+          <div class="chat_user_info">${item.user.username} ${moment(item.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss'
+      )}</div>
+          <div class="chat_content">${item.content}</div>
+        </div>
+      `;
+    }
+  });
+  $('.chat_message').html(message_divs);
+  $('.chat_message').animate({ scrollTop: $('.chat_message')[0].scrollHeight }, 200);
 }

@@ -1,6 +1,8 @@
 const task_ws = require('./task_ws');
 const project_ws = require('./project_ws');
 const apidoc_ws = require('./apidoc_ws');
+const user_ws = require('./user_ws');
+const chat_ws = require('./chat_ws');
 const user_servie = require('../services/user_service');
 const result = require('../utils/result');
 const config = require('../config');
@@ -18,6 +20,9 @@ module.exports = (io) => {
     await user_servie.bind(userId, true, socketId);
     socket.emit('message', result(config.errorCode.SUCCESS, '当前登录帐号与socket.io绑定成功', null));
     console.log(`${username} 上线了!`);
+    // 给所有用户发送当前用户
+    let users = await user_servie.findAll({ where: { id: { $ne: userId } } });
+    socket.broadcast.emit('data', result(config.wsCode.USERS, null, { users: users, userId: 0 }));
     // 用户关闭浏览器后失去连接更新用户的状态
     socket.on('disconnect', async () => {
       let user = await user_servie.findBySocketId(socketId);
@@ -25,6 +30,9 @@ module.exports = (io) => {
         await remove(socket_users, { socketId: socketId });
         await user_servie.bind(user.id, false, null);
         console.log(`${user.username} 下线了!`);
+        // 给所有用户发送当前用户
+        let users = await user_servie.findAll({ where: { id: { $ne: userId } } });
+        socket.broadcast.emit('data', result(config.wsCode.USERS, null, { users: users, userId: 0 }));
       }
     });
 
@@ -122,6 +130,12 @@ module.exports = (io) => {
         apidoc_ws.findApidoc(socket, payload.projectId);
       } else if (result.code === config.wsCode.DELETE_APIDOC) {
         apidoc_ws.deleteApidoc(io, socket_users, payload.id, payload.projectId);
+      } else if (result.code === config.wsCode.FETCH_USERS) {
+        user_ws.findAll(io, socket_users);
+      } else if (result.code === config.wsCode.FETCH_CHAT) {
+        chat_ws.findChat(socket, payload.pageNo, payload.beforeId, payload.userId, payload.targetUserId);
+      } else if (result.code === config.wsCode.CREATE_CHAT) {
+        chat_ws.createChat(io, payload.content, userId, payload.targetUserId, payload.type);
       }
     });
   });
