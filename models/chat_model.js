@@ -11,7 +11,7 @@ const chat_model = sequelize.define(
       primaryKey: true
     },
     content: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false,
       comment: '消息内容'
     },
