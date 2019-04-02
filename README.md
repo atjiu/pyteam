@@ -72,6 +72,8 @@ pm2 restart pyteam
 
 ![](./screenshot/task.gif)
 
+![](./screenshot/chatroom.gif)
+
 ## 使用场景
 
 内网使用，外网碰到的问题请自行解决
