@@ -21,8 +21,8 @@ module.exports = (io) => {
     socket.emit('message', result(config.errorCode.SUCCESS, '当前登录帐号与socket.io绑定成功', null));
     console.log(`${username} 上线了!`);
     // 给所有用户发送当前用户
-    let users = await user_servie.findAll({ where: { id: { $ne: userId } } });
-    socket.broadcast.emit('data', result(config.wsCode.USERS, null, { users: users, userId: 0 }));
+    let users = await user_servie.findAll({ order: [ [ 'online', 'DESC' ] ] });
+    io.emit('data', result(config.wsCode.USERS, null, { users: users, userId: userId }));
     // 用户关闭浏览器后失去连接更新用户的状态
     socket.on('disconnect', async () => {
       let user = await user_servie.findBySocketId(socketId);
@@ -31,8 +31,8 @@ module.exports = (io) => {
         await user_servie.bind(user.id, false, null);
         console.log(`${user.username} 下线了!`);
         // 给所有用户发送当前用户
-        let users = await user_servie.findAll({ where: { id: { $ne: userId } } });
-        socket.broadcast.emit('data', result(config.wsCode.USERS, null, { users: users, userId: 0 }));
+        let users = await user_servie.findAll({ order: [ [ 'online', 'DESC' ] ] });
+        io.emit('data', result(config.wsCode.USERS, null, { users: users, userId: 0 }));
       }
     });
 

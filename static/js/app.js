@@ -47,8 +47,10 @@ function shouldUpdate(data) {
     }
   } else if (data.code === 921) {
     if (currentPath === '/chat') {
-      sessionStorage.setItem('users', JSON.stringify(data.detail));
-      renderChatUsers();
+      if (data.detail.users.length > 0) {
+        sessionStorage.setItem('users', JSON.stringify(data.detail));
+        renderChatUsers();
+      }
     }
   } else if (data.code === 924) {
     let openChatUserId = sessionStorage.getItem('openChatUserId');
