@@ -167,11 +167,20 @@ body {
   overflow-x: hidden;
 }
 
+#chat_div .chat_container .chat_message img {
+  max-width: 80%;
+}
+
 #chat_div .chat_container .chat_input {
   height: 100px;
   border-top: 2px solid #ddd;
   padding: 10px;
   outline: 0;
+  overflow: auto;
+}
+
+#chat_div .chat_container .chat_input img {
+  max-width: 100%;
 }
 
 #chat_div .chat_container .chat_right button {
