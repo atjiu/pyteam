@@ -374,7 +374,8 @@ function uploadFile(id) {
 
 function renderChatUsers() {
   let data = JSON.parse(sessionStorage.getItem('users'));
-  let users = _.filter(data.users, (item) => item.id !== parseInt(data.userId));
+  let userId = sessionStorage.getItem('userId');
+  let users = _.filter(data.users, (item) => item.id !== parseInt(userId));
   let user_divs = _.map(
     users,
     (item) => `
