@@ -197,3 +197,8 @@ body {
   right: 10px;
   bottom: 10px;
 }
+
+.chat_content {
+  padding: 5px 10px;
+  margin-top: 10px;
+}

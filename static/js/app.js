@@ -425,18 +425,21 @@ function renderChatMessage() {
     let mine = parseInt(data.userId) === parseInt(item.user.id);
     if (mine) {
       return `
-        <div class="text-right">
-          <div class="chat_user_info">${moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')} ${item.user
-        .username}</div>
+        <div class="text-right" style="margin: 10px 0;">
+          <div class="chat_user_info">${moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+            ${item.user.username}
+            <img src="${item.user.avatar}" width="24" style="border-radius: 50%;" alt=""/>
+          </div>
           <div class="chat_content">${item.content}</div>
         </div>
       `;
     } else {
       return `
-        <div>
-          <div class="chat_user_info">${item.user.username} ${moment(item.createdAt).format(
-        'YYYY-MM-DD HH:mm:ss'
-      )}</div>
+        <div style="margin: 10px 0;">
+          <div class="chat_user_info">
+          <img src="${item.user.avatar}" width="24" style="border-radius: 50%;" alt=""/>
+          ${item.user.username}
+          ${moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</div>
           <div class="chat_content">${item.content}</div>
         </div>
       `;

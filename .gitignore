@@ -6,3 +6,5 @@ package-lock.json
 .DS_store
 test.js
 out.png
+static/avatar/
+static/attachments/
