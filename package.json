@@ -25,7 +25,8 @@
     "mysql2": "^1.6.5",
     "nunjucks": "^3.2.0",
     "sequelize": "^5.1.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "text2png": "^2.1.0"
   },
   "devDependencies": {
     "cross-env": "^5.2.0"

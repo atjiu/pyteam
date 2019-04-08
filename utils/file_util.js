@@ -1,7 +1,9 @@
+const fs = require('fs');
+const path = require('path');
 const config = require('../config');
 const mkdirp = require('mkdirp');
-const path = require('path');
-const fs = require('fs');
+const text2png = require('text2png');
+const str_util = require('../utils/str_util');
 
 exports.uploadFile = (file, filePath) => {
   return new Promise((resolve, reject) => {
@@ -30,4 +32,26 @@ exports.uploadFile = (file, filePath) => {
     // 可读流通过管道写入可写流
     reader.pipe(upStream);
   });
+};
+
+exports.generatorAvatar = async (username, text) => {
+  let avatarPath = path.join(`${config.avatar_dir}/${username}`);
+  if (!fs.existsSync(avatarPath)) mkdirp.sync(`${avatarPath}`);
+  let r = str_util.randomNum(0, 255);
+  let g = str_util.randomNum(0, 255);
+  let b = str_util.randomNum(0, 255);
+  console.log(r, g, b);
+  fs.writeFileSync(
+    `${avatarPath}/avatar.png`,
+    text2png(text, {
+      color: '#fff',
+      textAlign: 'center',
+      bgColor: `rgb(${r},${g},${b}, 0)`,
+      padding: 20,
+      font: '60px YaHeiConsolas',
+      localFontName: 'YaHeiConsolas',
+      localFontPath: `${path.resolve('static', 'fonts', 'YaHeiConsolasHybrid1.12.ttf')}`
+    })
+  );
+  return `${config.base_url}/avatar/${username}/avatar.png`;
 };

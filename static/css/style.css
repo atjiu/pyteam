@@ -146,6 +146,10 @@ body {
   padding: 0 10px;
 }
 
+#chat_div .chat_container .chat_sidebar div div img {
+  margin-top: 8px;
+}
+
 #chat_div .chat_container .chat_sidebar div div span:nth-child(2) {
   max-width: 100px;
   overflow: hidden;
@@ -155,6 +159,7 @@ body {
 #chat_div .chat_container .chat_sidebar div div:last-child {
   /* width: 40px; */
   padding-right: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 #chat_div .chat_container .chat_right {

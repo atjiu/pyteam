@@ -1,6 +1,7 @@
 const models = require('../models/models');
 const { Sequelize, sequelize } = require('../models/db');
 const uuid = require('uuid');
+const file_util = require('../utils/file_util');
 
 let user_model = models.user_model,
   department_model = models.department_model,
@@ -12,6 +13,8 @@ exports.login = async (username, password) => {
 
 exports.register = async (username, password, departmentId) => {
   let user;
+  // generator user avatar
+  let avatar = await file_util.generatorAvatar(username, username.trim().substr(0, 1));
   await sequelize.transaction({ autocommit: true }, async (t) => {
     if (departmentId && departmentId !== '') {
       await department_model.update(
@@ -26,6 +29,7 @@ exports.register = async (username, password, departmentId) => {
         username: username,
         password: password,
         departmentId: departmentId,
+        avatar: avatar,
         token: uuid.v4()
       },
       { transaction: t }

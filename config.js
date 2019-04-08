@@ -8,6 +8,7 @@ module.exports = {
   ws_url: is_production ? 'https://team.yiiu.co' : `http://localhost:${port}`,
   ws_secure: is_production,
   attachment_dir: path.join(__dirname, 'static', 'attachments'),
+  avatar_dir: path.join(__dirname, 'static', 'avatar'),
   admins: [ 'admin' ], // 管理员用户名
   pageSize: 40,
   mysql: is_production

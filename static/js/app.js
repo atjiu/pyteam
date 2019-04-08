@@ -128,7 +128,7 @@ function tasksTemplate(task) {
         <td>
           <a data-pjax href="/project/${task.project.id}/task/${task.id}">
             ${task.name}
-            <span class="label label-info pull-right">${task.executorUser.username}</span>
+            <img src="${task.executorUser.avatar}" width="24" class="pull-right" alt="avatar"/>
           </a>
         </td>
       </tr>
@@ -382,6 +382,7 @@ function renderChatUsers() {
     <div class="chat_user_div" data-id='${item.id}' onclick="openChat(${item.id})">
       <div>
         <span ${item.online ? 'style="color: greenyellow"' : 'style="color: gray"'}>•</span>
+        <img src="${item.avatar}" width="24" height="24" alt=""/>&nbsp;
         <span>${item.username}</span>
       </div>
       <div>${item.department ? item.department.name : '&nbsp;'}</div>
