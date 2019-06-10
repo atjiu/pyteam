@@ -1,16 +1,28 @@
-{% if not is_pjax %}
-  {% extends "./layout/layout.html" %}
-{% endif %}
-{% block page_content %}
+{% if not is_pjax %} {% extends "./layout/layout.html" %} {% endif %} {% block
+page_content %}
 
 <ol class="breadcrumb">
   <li>
     <a data-pjax href="/">Home</a>
   </li>
-  <li class="active">{{project.name}}</li>
+  <li class="active">{{ project.name }}</li>
   <span class="pull-right">
-    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" href='#modal-id-update'>项目设置</button>
-    <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" href='#modal-id'>创建任务</button>
+    <button
+      type="button"
+      class="btn btn-xs btn-primary"
+      data-toggle="modal"
+      href="#modal-id-update"
+    >
+      项目设置
+    </button>
+    <button
+      type="button"
+      class="btn btn-xs btn-primary"
+      data-toggle="modal"
+      href="#modal-id"
+    >
+      创建任务
+    </button>
   </span>
 </ol>
 
@@ -52,37 +64,68 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          &times;
+        </button>
         <h4 class="modal-title">创建任务</h4>
       </div>
       <div class="modal-body">
         <form onsubmit="return;" id="modal_form">
           <div class="form-group">
             <label for="">任务名</label>
-            <input type="hidden" id="projectId" value="{{project.id}}"/>
-            <input type="text" class="form-control" id="name" placeholder="任务名">
+            <input type="hidden" id="projectId" value="{{ project.id }}" />
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="任务名"
+            />
           </div>
           <div class="form-group">
             <label for="">描述</label>
-            <textarea id="intro" rows="5" class="form-control" placeholder="描述, 支持Markdown语法..."></textarea>
+            <textarea
+              id="intro"
+              rows="5"
+              class="form-control"
+              placeholder="描述, 支持Markdown语法..."
+            ></textarea>
           </div>
           <div class="form-group">
             <label for="">截止日期</label>
-            <input type="text" class="form-control" id="deadline" placeholder="截止日期">
+            <input
+              type="text"
+              class="form-control"
+              id="deadline"
+              placeholder="截止日期"
+            />
           </div>
           <div class="form-group">
             <label for="">指派给</label>
             <select id="executor" class="form-control">
-              {% for item in users %}
-                <option value="{{item.id}}">{{item.username}}</option>
+              {% for item in joinUsers %}
+              <option value="{{ item.id }}">{{ item.username }}</option>
               {% endfor %}
             </select>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" onclick="saveTask()">保存</button>
+        <button
+          type="button"
+          class="btn btn-default"
+          id="modalCloseBtn"
+          data-dismiss="modal"
+        >
+          关闭
+        </button>
+        <button type="button" class="btn btn-primary" onclick="saveTask()">
+          保存
+        </button>
       </div>
     </div>
   </div>
@@ -93,110 +136,141 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          &times;
+        </button>
         <h4 class="modal-title">更新项目</h4>
       </div>
       <div class="modal-body">
         <form onsubmit="return;" id="modal_form_update">
-            <div class="form-group">
-              <label for="name">项目名</label>
-              <input type="text" class="form-control" id="projectName" value="{{project.name}}" placeholder="项目名">
-            </div>
-            <div class="form-group">
-              <label for="intro">项目描述</label>
-              <input type="text" class="form-control" id="projectIntro" value="{{project.intro}}" placeholder="项目描述">
-            </div>
-            <div class="form-group">
-              <label for="">参与用户</label>
-              <div class="row">
-                {% for item in users %}
-                  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    <input type="checkbox" id="joinUser_{{item.id}}" name="joinUsers" value="{{item.id}}">
-                    <label for="joinUser_{{item.id}}">{{item.username}}</label>
-                  </div>
-                {% endfor %}
+          <div class="form-group">
+            <label for="name">项目名</label>
+            <input
+              type="text"
+              class="form-control"
+              id="projectName"
+              value="{{ project.name }}"
+              placeholder="项目名"
+            />
+          </div>
+          <div class="form-group">
+            <label for="intro">项目描述</label>
+            <input
+              type="text"
+              class="form-control"
+              id="projectIntro"
+              value="{{ project.intro }}"
+              placeholder="项目描述"
+            />
+          </div>
+          <div class="form-group">
+            <label for="">参与用户</label>
+            <div class="row">
+              {% for item in users %}
+              <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <input
+                  type="checkbox"
+                  id="joinUser_{{ item.id }}"
+                  name="joinUsers"
+                  value="{{ item.id }}"
+                />
+                <label for="joinUser_{{ item.id }}">{{ item.username }}</label>
               </div>
+              {% endfor %}
             </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="modalCloseBtnUpdate" data-dismiss="modal">关闭</button>
-        <button type="button" class="btn btn-primary" onclick="updateProject()">保存</button>
+        <button
+          type="button"
+          class="btn btn-default"
+          id="modalCloseBtnUpdate"
+          data-dismiss="modal"
+        >
+          关闭
+        </button>
+        <button type="button" class="btn btn-primary" onclick="updateProject()">
+          保存
+        </button>
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
-{% block page_js %}
-  {% if not is_pjax %}
-    <script src="/js/drag.js"></script>
-    <script>
-      dragTask();
-    </script>
-  {% endif %}
-  <script>
-    $("#deadline").datetimepicker({
-      format: 'YYYY-MM-DD HH:mm:ss'
+{% endblock %} {% block page_js %} {% if not is_pjax %}
+<script src="/js/drag.js"></script>
+<script>
+  dragTask();
+</script>
+{% endif %}
+<script>
+  $("#deadline").datetimepicker({
+    format: 'YYYY-MM-DD HH:mm:ss'
+  });
+  {% for item in joinUsers %}
+    $("#joinUser_{{item.id}}").prop('checked', true);
+  {% endfor %}
+  // 触发fetch task事件
+  $('.spinner').show();
+  setTimeout(function() {
+    ws.emit('data', {code: 905, detail: {projectId: {{project.id}}}});
+  }, 500);
+  // 更新项目
+  function updateProject() {
+    // 收集选中的用户checkbox
+    var joinUsers = [];
+    $("input[name='joinUsers']:checked").each(function(item){
+      joinUsers.push($(this).val())
     });
-    {% for item in joinUsers %}
-      $("#joinUser_{{item.id}}").prop('checked', true);
-    {% endfor %}
-    // 触发fetch task事件
-    $('.spinner').show();
-    setTimeout(function() {
-      ws.emit('data', {code: 905, detail: {projectId: {{project.id}}}});
-    }, 500);
-    // 更新项目
-    function updateProject() {
-      // 收集选中的用户checkbox
-      var joinUsers = [];
-      $("input[name='joinUsers']:checked").each(function(item){
-        joinUsers.push($(this).val())
-      });
 
-      let name = $("#projectName").val();
-      let intro = $("#projectIntro").val();
+    let name = $("#projectName").val();
+    let intro = $("#projectIntro").val();
 
-      if (name.length === 0) {
-        alert("请输入项目名");
-        return;
-      }
-      if (joinUsers.length === 0) {
-        alert("请至少选择一个参与用户");
-        return;
-      }
+    if (name.length === 0) {
+      alert("请输入项目名");
+      return;
+    }
+    if (joinUsers.length === 0) {
+      alert("请至少选择一个参与用户");
+      return;
+    }
 
-      ws.emit('data', {code: 908, detail: {
-        id: {{project.id}},
+    ws.emit('data', {code: 908, detail: {
+      id: {{project.id}},
+      name: name,
+      intro: intro,
+      joinUsers: joinUsers,
+      type: 'project'
+    }})
+    $("#modalCloseBtnUpdate").click();
+  }
+  // 保存任务
+  function saveTask() {
+    let projectId = $("#projectId").val();
+    let name = $("#name").val();
+    let intro = $("#intro").val();
+    let deadline = $("#deadline").val();
+    if (name.length === 0) {
+      alert("任务名不能为空");
+      return;
+    }
+    ws.emit('data', {
+      code: 904,
+      detail: {
+        projectId: projectId,
         name: name,
         intro: intro,
-        joinUsers: joinUsers,
-        type: 'project'
-      }})
-      $("#modalCloseBtnUpdate").click();
-    }
-    // 保存任务
-    function saveTask() {
-      let projectId = $("#projectId").val();
-      let name = $("#name").val();
-      let intro = $("#intro").val();
-      let deadline = $("#deadline").val();
-      if (name.length === 0) {
-        alert("任务名不能为空");
-        return;
+        deadline: deadline,
+        executor: $("#executor").val()
       }
-      ws.emit('data', {
-        code: 904,
-        detail: {
-          projectId: projectId,
-          name: name,
-          intro: intro,
-          deadline: deadline,
-          executor: $("#executor").val()
-        }
-      });
-      $("#modal_form")[0].reset();
-      $("#modalCloseBtn").click();
-    }
-  </script>
+    });
+    $("#modal_form")[0].reset();
+    $("#modalCloseBtn").click();
+  }
+</script>
 {% endblock %}

@@ -3,7 +3,7 @@ const path = require('path');
 const config = require('../config');
 const mkdirp = require('mkdirp');
 const text2png = require('text2png');
-const str_util = require('../utils/str_util');
+const str_util = require('./str_util');
 
 exports.uploadFile = (file, filePath) => {
   return new Promise((resolve, reject) => {
