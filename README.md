@@ -5,7 +5,7 @@
 
 ## TOC
 
-- [TOC](#toc)
+- [TOC](#TOC)
 - [技术栈](#技术栈)
 - [启动](#启动)
 - [功能&特色](#功能特色)
@@ -71,6 +71,8 @@ pm2 restart pyteam
 ![](./screenshot/create-project.gif)
 
 ![](./screenshot/task.gif)
+
+![](./screenshot/update_task.gif)
 
 ![](./screenshot/chatroom.gif)
 

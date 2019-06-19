@@ -86,12 +86,12 @@ body {
   padding-left: 20px;
 }
 
-#projects_div [class^=col-] {
+#projects_div [class^="col-"] {
   height: 200px;
 }
 
 @media (max-width: 768px) {
-  #projects_div [class^=col-] {
+  #projects_div [class^="col-"] {
     height: auto;
   }
 }
@@ -201,4 +201,32 @@ body {
 .chat_content {
   padding: 5px 10px;
   margin-top: 10px;
+}
+
+.select-div {
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0) inset;
+  border: 1px solid #eee;
+  background-color: #fff;
+  position: absolute;
+  z-index: 9999;
+  outline: none;
+}
+
+.option-div {
+  border-bottom: 1px solid #eee;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.option-div:last-child {
+  border: 0;
+}
+
+.option-div:hover {
+  background-color: #eee;
+}
+
+.enable-click:hover {
+  cursor: pointer;
+  background-color: #eee;
 }

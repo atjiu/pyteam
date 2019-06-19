@@ -1,26 +1,34 @@
-{% if not is_pjax %}
-  {% extends "./layout/layout.html" %}
-{% endif %}
-{% block page_content %}
+{% if not is_pjax %} {% extends "./layout/layout.html" %} {% endif %} {% block
+page_content %}
 <ol class="breadcrumb">
   <li>
     <a data-pjax href="/">Home</a>
   </li>
-  <li><a data-pjax href="/project/{{task.project.id}}">{{task.project.name}}</a></li>
-  <li class="active">{{task.name}}</li>
+  <li>
+    <a data-pjax href="/project/{{ task.project.id }}">{{
+      task.project.name
+    }}</a>
+  </li>
+  <li class="active">{{ task.name }}</li>
 </ol>
 
 <div id="task_detail_div"></div>
 <div id="task_attachment_div"></div>
 <div id="task_dynamic_div"></div>
-<input type="text" id="content" data-task-id="{{task.id}}" onkeypress="sendTaskMessage(event)" class="form-control" placeholder="type something..."/>
+<input
+  type="text"
+  id="content"
+  data-task-id="{{ task.id }}"
+  onkeypress="sendTaskMessage(event)"
+  class="form-control"
+  placeholder="type something..."
+/>
 
-{% endblock %}
-{% block page_js %}
-  <script>
-    $('.spinner').show();
-    setTimeout(function() {
-      ws.emit('data', { code: 909, detail: { taskId: {{task.id}} } });
-    }, 500);
-  </script>
+{% endblock %} {% block page_js %}
+<script>
+  $('.spinner').show();
+  setTimeout(function() {
+    ws.emit('data', { code: 909, detail: { taskId: {{task.id}} } });
+  }, 500);
+</script>
 {% endblock %}

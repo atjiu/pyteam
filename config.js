@@ -1,28 +1,28 @@
-const path = require('path');
+const path = require("path");
 
 const port = 3002;
-let is_production = process.env.NODE_ENV === 'production' ? true : false;
+let is_production = process.env.NODE_ENV === "production" ? true : false;
 module.exports = {
   port: port,
-  base_url: is_production ? 'https://team.yiiu.co' : `http://localhost:${port}`,
-  ws_url: is_production ? 'https://team.yiiu.co' : `http://localhost:${port}`,
+  base_url: is_production ? "https://team.yiiu.co" : `http://localhost:${port}`,
+  ws_url: is_production ? "https://team.yiiu.co" : `http://localhost:${port}`,
   ws_secure: is_production,
-  attachment_dir: path.join(__dirname, 'static', 'attachments'),
-  avatar_dir: path.join(__dirname, 'static', 'avatar'),
-  admins: [ 'admin' ], // 管理员用户名
+  attachment_dir: path.join(__dirname, "static", "attachments"),
+  avatar_dir: path.join(__dirname, "static", "avatar"),
+  admins: ["admin"], // 管理员用户名
   pageSize: 40,
   mysql: is_production
     ? {
-        host: 'localhost',
-        user: 'root',
-        password: '123123',
-        database: 'pyteam'
+        host: "localhost",
+        user: "root",
+        password: "123123",
+        database: "pyteam"
       }
     : {
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'pyteam'
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "pyteam"
       },
   errorCode: {
     SUCCESS: 200,
@@ -30,9 +30,9 @@ module.exports = {
     TOKEN_INVALID: 202
   },
   taskStatus: {
-    WAIT: '待处理',
-    PROCESSING: '进行中',
-    FINISH: '已完成'
+    WAIT: "待处理",
+    PROCESSING: "进行中",
+    FINISH: "已完成"
   },
   wsCode: {
     PROJECTS: 901,
@@ -60,6 +60,10 @@ module.exports = {
     FETCH_CHAT: 923,
     CHAT: 924,
     CREATE_CHAT: 925,
-    NEW_CHAT: 926
+    NEW_CHAT: 926,
+    FETCH_PROJECT_USERS: 927, // 获取参与项目的用户
+    CHANGE_TASK_EXECUTOR_USER: 928, // 更改任务的执行人
+    UPDATE_TASK_NAME: 929, // 更新任务名
+    UPDATE_TASK_INTRO: 930, // 更新任务描述
   }
 };
