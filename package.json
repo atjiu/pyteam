@@ -19,7 +19,7 @@
     "koa-router": "^7.4.0",
     "koa-session": "^5.10.1",
     "koa-static": "^5.0.0",
-    "marked": "^0.6.1",
+    "marked": "^4.0.10",
     "mkdirp": "^0.5.1",
     "moment": "^2.24.0",
     "mysql2": "^1.6.5",
