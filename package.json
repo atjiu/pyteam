@@ -21,7 +21,7 @@
     "koa-static": "^5.0.0",
     "marked": "^0.6.1",
     "mkdirp": "^0.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mysql2": "^1.6.5",
     "nunjucks": "^3.2.0",
     "sequelize": "^5.1.0",
