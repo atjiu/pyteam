@@ -1,8 +1,6 @@
 
 > 仿 teambition 使用 koa 开发的一个无刷新的任务管理系统，当然功能没有人家teambition多了，不过我觉得用的最多的也就这些功能了
 
-体验地址：[https://team.yiiu.co/](https://team.yiiu.co/)
-
 ## TOC
 
 - [TOC](#TOC)
@@ -95,7 +93,6 @@ pm2 restart pyteam
 ## 有问题？
 
 - 提 issue
-- 到 [开发俱乐部](https://17dev.club/) 提问
 
 **如果有好的建议，请不要犹豫，直接发issue**
 
